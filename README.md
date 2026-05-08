@@ -16,7 +16,9 @@ dashboard-mortalidad-colombia/
 ├── render.yaml # Configuración para despliegue en Render
 └── README.md # Documentación del proyecto
 
-text
+<div align="center">
+  <img src="./assets/img/estructura_proyecto.png" alt="Dashboard de Mortalidad" width="600">
+</div>
 
 ## Requisitos
 - Python 3.11 o superior
@@ -63,33 +65,57 @@ python src/app.py
 
 ### Mapa de mortalidad por departamento
 
-El mapa muestra la distribución geográfica de las muertes. Se observa una mayor concentración en departamentos densamente poblados como Antioquia, Valle del Cauca y Cundinamarca.
-
 <div align="center">
   <img src="./assets/img/mapa.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
+El mapa muestra la distribución geográfica de las muertes. Se observa una mayor concentración en departamentos densamente poblados como Antioquia, Valle del Cauca y Cundinamarca.
+
 ### Gráfico de líneas por mes
+
+<div align="center">
+  <img src="./assets/img/grafico_lineas.png" alt="Dashboard de Mortalidad" width="600">
+</div>
 
 Revela la variación estacional de las defunciones, con picos en meses específicos que podrían asociarse a fenómenos climáticos o epidemiológicos.
 
 ### Top 5 ciudades más violentas
 
+<div align="center">
+  <img src="./assets/img/grafico_barras.png" alt="Dashboard de Mortalidad" width="600">
+</div>
+
 Identifica las ciudades con mayor número de homicidios (código X95), destacando las principales urbes del país.
 
 ### Ciudades con menor mortalidad
+
+<div align="center">
+  <img src="./assets/img/grafico_circular.png" alt="Dashboard de Mortalidad" width="600">
+</div>
 
 Muestra las localidades con menor número de defunciones, útil para estudios de factores protectores.
 
 ### Tabla de causas de muerte
 
+<div align="center">
+  <img src="./assets/img/tabla.png" alt="Dashboard de Mortalidad" width="600">
+</div>
+
 Lista las 10 causas más frecuentes, permitiendo identificar las principales amenazas para la salud pública.
 
 ### Barras apiladas por sexo y departamento
 
+<div align="center">
+  <img src="./assets/img/grafico_barras_apiladas.png" alt="Dashboard de Mortalidad" width="600">
+</div>
+
 Compara la mortalidad entre hombres y mujeres en cada departamento, evidenciando diferencias significativas por género.
 
 ### Histograma por ciclo de vida
+
+<div align="center">
+  <img src="./assets/img/histograma.png" alt="Dashboard de Mortalidad" width="600">
+</div>
 
 Distribuye las muertes según las categorías etarias definidas por el DANE, mostrando los grupos de mayor vulnerabilidad (vejez, adultez intermedia, mortalidad neonatal).
 
@@ -104,8 +130,8 @@ Gunicorn (servidor de producción)
 
 ### Autores
 
-Jairo Teófilo Araméndiz Pinzón
-Luz Aida Blandon Caicedo
+Jairo Teófilo Araméndiz Pinzón -
+Luz Aida Blandon Caicedo -
 Fabio Gomez Estepa
 
 
