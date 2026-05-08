@@ -25,7 +25,7 @@ text
 ## Instalación y ejecución local
 1. Clonar el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/dashboard-mortalidad-colombia.git
+   git clone https://github.com/Aramendiz/dashboard-mortalidad-colombia.git
    cd dashboard-mortalidad-colombia
    ```
 
