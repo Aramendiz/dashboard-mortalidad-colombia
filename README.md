@@ -8,20 +8,21 @@ Identificar patrones demográficos y regionales de mortalidad en Colombia median
 
 ## Estructura del proyecto
 
-```text
-dashboard-mortalidad-colombia/
-├── src/
-│   └── app.py            # Aplicación principal Dash
-├── data/                 # Archivos de datos fuente
-├── assets/               # Estilos CSS personalizados e imágenes
-├── requirements.txt      # Dependencias del proyecto
-├── render.yaml           # Configuración para despliegue en Render
-└── README.md             # Documentación del proyecto
-```
+  ```text
+  dashboard-mortalidad-colombia/
+  ├── src/
+  │   └── app.py            # Aplicación principal Dash
+  ├── data/                 # Archivos de datos fuente
+  ├── assets/               # Estilos CSS personalizados e imágenes
+  ├── requirements.txt      # Dependencias del proyecto
+  ├── render.yaml           # Configuración para despliegue en Render
+  └── README.md             # Documentación del proyecto
+  ```
 
 ## Requisitos
-- Python 3.11 o superior
-- Librerías: dash, plotly, pandas, openpyxl, gunicorn
+  
+  - Python 3.11 o superior
+  - Librerías: dash, plotly, pandas, openpyxl, gunicorn
 
 ## Instalación y ejecución local
 1. Clonar el repositorio:
@@ -31,23 +32,20 @@ dashboard-mortalidad-colombia/
    ```
 
 2. Crear y activar entorno virtual:
-
-```bash
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
-```
+  ```bash
+  python -m venv venv
+  source venv/bin/activate  # En Windows: venv\Scripts\activate
+  ```
 
 3. Instalar dependencias:
-
-```bash
-pip install -r requirements.txt
-```
+  ```bash
+  pip install -r requirements.txt
+  ```
 
 4. Ejecutar la aplicación:
-
-```bash
-python src/app.py
-```
+  ```bash
+  python src/app.py
+  ```
 
 5. Abrir el navegador en http://127.0.0.1:8050
 
@@ -119,13 +117,14 @@ Compara la mortalidad entre hombres y mujeres en cada departamento, evidenciando
 Distribuye las muertes según las categorías etarias definidas por el DANE, mostrando los grupos de mayor vulnerabilidad (vejez, adultez intermedia, mortalidad neonatal).
 
 ### Software utilizado
-
-Python 3.11
-Dash 2.14
-Plotly 5.18
-Pandas 2.1
-Bootstrap 5
-Gunicorn (servidor de producción)
+ ``` text
+  Python 3.11
+  Dash 2.14
+  Plotly 5.18
+  Pandas 2.1
+  Bootstrap 5
+  Gunicorn (servidor de producción)
+  ```
 
 ### Autores
 
