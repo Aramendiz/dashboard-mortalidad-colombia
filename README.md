@@ -127,9 +127,8 @@ Distribuye las muertes según las categorías etarias definidas por el DANE, mos
   ```
 
 ### Autores
-
-```text
-- Jairo Teófilo Araméndiz Pinzón
-- Luz Aida Blandon Caicedo
-- Fabio Gomez Estepa
-```
+  ```text
+  Jairo Teófilo Araméndiz Pinzón
+  Luz Aida Blandon Caicedo
+  Fabio Gomez Estepa
+  ```
