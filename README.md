@@ -51,14 +51,14 @@ python src/app.py
 
 5. Abrir el navegador en http://127.0.0.1:8050
 
-### 📄Despliegue en Render
+### 🚀 Para desplegar en Render
 
-1. Subir el código a un repositorio de GitHub.
-2. Crear una cuenta en render.com.
-3. Seleccionar "New +" → "Blueprint" y conectar el repositorio.
-4. Render detectará automáticamente el archivo render.yaml.
-5. Hacer clic en "Deploy Blueprint".
-6. La aplicación estará disponible en una URL similar a: https://dashboard-mortalidad-colombia.onrender.com
+1. **Sube todo** a un repositorio de GitHub.
+2. **Crea una cuenta** en render.com.
+3. **Haz clic** en "New +" → "Blueprint".
+4. **Conecta** tu repositorio.
+5. **Render leerá** render.yaml y desplegará automáticamente.
+6. **Recibirás** una URL pública como: https://dashboard-mortalidad-colombia-5b7n.onrender.com
 
 ### Visualizaciones y resultados
 
@@ -134,26 +134,3 @@ Gunicorn (servidor de producción)
 - Luz Aida Blandon Caicedo
 - Fabio Gomez Estepa
 ```
-
-
-### ▶️ Pasos para ejecutar
-
-1. **Crea la estructura de carpetas** exactamente como se muestra arriba.
-2. **Copia el código de `app.py`** en `src/app.py`.
-3. **Copia el `requirements.txt`** y `render.yaml` en la raíz.
-4. **Coloca tus 3 archivos Excel** dentro de la carpeta `data/`.
-5. **Ejecuta**:
-   ```bash
-   pip install -r requirements.txt
-   python src/app.py
-   ```
-6. **Abre** http://127.0.0.1:8050 en tu navegador
-
-### 🚀 Para desplegar en Render
-
-1. **Sube todo** a un repositorio de GitHub.
-2. **Crea una cuenta** en render.com.
-3. **Haz clic** en "New +" → "Blueprint".
-4. **Conecta** tu repositorio.
-5. **Render leerá** render.yaml y desplegará automáticamente.
-6. **Recibirás** una URL pública como: https://dashboard-mortalidad-colombia.onrender.com
