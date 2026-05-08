@@ -17,7 +17,7 @@ dashboard-mortalidad-colombia/
 └── README.md # Documentación del proyecto
 
 <div align="center">
-  <img src="./assets/img/estructura_proyecto.png" alt="Dashboard de Mortalidad" width="600">
+  <img src="./assets/img/estructura_proyecto.png" alt="Dashboard de Mortalidad" width="200">
 </div>
 
 ## Requisitos
