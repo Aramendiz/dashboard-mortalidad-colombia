@@ -65,6 +65,10 @@ python src/app.py
 
 El mapa muestra la distribución geográfica de las muertes. Se observa una mayor concentración en departamentos densamente poblados como Antioquia, Valle del Cauca y Cundinamarca.
 
+<div align="center">
+  <img src="./assets/img/mapa.png" alt="Dashboard de Mortalidad" width="600">
+</div>
+
 ### Gráfico de líneas por mes
 
 Revela la variación estacional de las defunciones, con picos en meses específicos que podrían asociarse a fenómenos climáticos o epidemiológicos.

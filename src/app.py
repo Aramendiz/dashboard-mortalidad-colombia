@@ -265,6 +265,10 @@ fig_pastel = px.pie(lowest, names='MUNICIPIO', values='MUERTES',
                     hole=0.48,
                     color_discrete_sequence=COLORWAY)
 
+# Ocultar leyenda
+fig_pastel.update_layout(showlegend=False)
+
+
 # 5. TABLA - 10 principales causas de muerte
 causas_df = df.groupby(['COD_MUERTE', 'CAUSA'])['CONTEO'].sum().nlargest(10).reset_index()
 causas_df.columns = ['Código', 'Causa de Muerte', 'Total de Casos']
