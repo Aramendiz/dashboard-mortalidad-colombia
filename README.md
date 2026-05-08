@@ -98,9 +98,11 @@ Pandas 2.1
 Bootstrap 5
 Gunicorn (servidor de producción)
 
-### Autor
+### Autores
 
-Jairo Teófilo Araméndiz Pinzón - Aplicaciones 1/Universidad La Salle]
+Jairo Teófilo Araméndiz Pinzón
+Luz Aida Blandon Caicedo
+Fabio Gomez Estepa
 
 
 ### ▶️ Pasos para ejecutar
