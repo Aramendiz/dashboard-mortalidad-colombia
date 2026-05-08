@@ -7,18 +7,17 @@ Este proyecto presenta un dashboard interactivo desarrollado con Dash y Plotly p
 Identificar patrones demográficos y regionales de mortalidad en Colombia mediante visualizaciones interactivas que faciliten la interpretación de los datos y apoyen la toma de decisiones en salud pública.
 
 ## Estructura del proyecto
+
+```text
 dashboard-mortalidad-colombia/
 ├── src/
-│ └── app.py # Aplicación principal Dash
-├── data/ # Archivos de datos fuente
-├── assets/ # Estilos CSS personalizados
-├── requirements.txt # Dependencias del proyecto
-├── render.yaml # Configuración para despliegue en Render
-└── README.md # Documentación del proyecto
-
-<div align="center">
-  <img src="./assets/img/estructura_proyecto.png" alt="Dashboard de Mortalidad" width="200">
-</div>
+│   └── app.py            # Aplicación principal Dash
+├── data/                 # Archivos de datos fuente
+├── assets/               # Estilos CSS personalizados e imágenes
+├── requirements.txt      # Dependencias del proyecto
+├── render.yaml           # Configuración para despliegue en Render
+└── README.md             # Documentación del proyecto
+```
 
 ## Requisitos
 - Python 3.11 o superior
@@ -130,9 +129,11 @@ Gunicorn (servidor de producción)
 
 ### Autores
 
-Jairo Teófilo Araméndiz Pinzón -
-Luz Aida Blandon Caicedo -
-Fabio Gomez Estepa
+```text
+- Jairo Teófilo Araméndiz Pinzón
+- Luz Aida Blandon Caicedo
+- Fabio Gomez Estepa
+```
 
 
 ### ▶️ Pasos para ejecutar
