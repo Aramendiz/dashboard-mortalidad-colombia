@@ -62,59 +62,73 @@ Identificar patrones demográficos y regionales de mortalidad en Colombia median
 
 ### Mapa de mortalidad por departamento
 
+Descripción: Un mapa de burbujas donde el tamaño de cada círculo representa el volumen total de defunciones por departamento.
+
 <div align="center">
   <img src="./assets/img/mapa.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
-El mapa muestra la distribución geográfica de las muertes. Se observa una mayor concentración en departamentos densamente poblados como Antioquia, Valle del Cauca y Cundinamarca.
+Hallazgo: Se identifica una concentración crítica en el triángulo andino (Antioquia, Valle del Cauca y Bogotá D.C.). Los departamentos de la periferia (Amazonía y Orinoquía) muestran burbujas significativamente menores, lo cual está correlacionado con la densidad poblacional del país.
 
 ### Gráfico de líneas por mes
+
+Descripción: Gráfico de líneas que muestra la evolución de las defunciones mes a mes durante el año 2019.
 
 <div align="center">
   <img src="./assets/img/grafico_lineas.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
-Revela la variación estacional de las defunciones, con picos en meses específicos que podrían asociarse a fenómenos climáticos o epidemiológicos.
+Hallazgo: El gráfico revela una caída drástica en el registro de muertes durante febrero (llegando al punto más bajo cerca de los 18k), seguida de una tendencia al alza que culmina en un pico máximo en diciembre (superando las 21.5k defunciones).
 
 ### Top 5 ciudades más violentas
+
+Descripción: Ranking de las 5 ciudades con mayor número de registros bajo el código CIE-10 X95 (Agresión con disparo de arma de fuego).
 
 <div align="center">
   <img src="./assets/img/grafico_barras.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
-Identifica las ciudades con mayor número de homicidios (código X95), destacando las principales urbes del país.
+Hallazgo: Santiago de Cali lidera esta estadística con 971 casos, seguida por Bogotá D.C. con 601. Este gráfico permite identificar geográficamente los focos de violencia externa en el país.
 
 ### Ciudades con menor mortalidad
+
+Descripción: Gráfico de tipo donut que resalta los 10 municipios colombianos con el menor número de defunciones registradas en 2019.
 
 <div align="center">
   <img src="./assets/img/grafico_circular.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
-Muestra las localidades con menor número de defunciones, útil para estudios de factores protectores.
+Hallazgo: La distribución es notablemente equitativa entre estos municipios (cada uno con un 10% del total de este subgrupo), incluyendo localidades como Berbeo, Campohermoso y Chalán. Estos valores mínimos permiten identificar zonas con baja densidad poblacional o posibles casos de éxito en factores protectores de salud, una vez filtrado el ruido estadístico de la base de datos general.
 
 ### Tabla de causas de muerte
+
+Descripción: Tabla detallada con los códigos CIE-10, diagnósticos y frecuencias absolutas.
 
 <div align="center">
   <img src="./assets/img/tabla.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
-Lista las 10 causas más frecuentes, permitiendo identificar las principales amenazas para la salud pública.
+Hallazgo: El Infarto agudo del miocardio (I219) es, por un margen amplio, la principal causa de muerte en Colombia con 35,088 casos, superando casi por cinco veces a la segunda causa (EPOC).
 
 ### Barras apiladas por sexo y departamento
+
+Descripción: Barras apiladas que comparan el volumen de defunciones entre hombres (azul) y mujeres (rojo) en los departamentos más afectados.
 
 <div align="center">
   <img src="./assets/img/grafico_barras_apiladas.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
-Compara la mortalidad entre hombres y mujeres en cada departamento, evidenciando diferencias significativas por género.
+Hallazgo: En todos los departamentos principales, la mortalidad masculina es superior a la femenina. En Bogotá D.C. y Antioquia, esta brecha es más pronunciada, lo que sugiere una mayor exposición de los hombres a riesgos de salud o factores externos.
 
 ### Histograma por ciclo de vida
+
+Descripción: Distribución de frecuencias basada en las categorías de edad estandarizadas por el DANE.
 
 <div align="center">
   <img src="./assets/img/histograma.png" alt="Dashboard de Mortalidad" width="600">
 </div>
 
-Distribuye las muertes según las categorías etarias definidas por el DANE, mostrando los grupos de mayor vulnerabilidad (vejez, adultez intermedia, mortalidad neonatal).
+Hallazgo: El grupo de la Vejez concentra el mayor volumen de mortalidad (superando los 110k casos), lo cual es biológicamente esperado. Sin embargo, resalta un repunte en la Adultez Intermedia y una cifra no despreciable en Mortalidad Neonatal, puntos clave para políticas de prevención temprana.
 
 ### Software utilizado
  ``` text
