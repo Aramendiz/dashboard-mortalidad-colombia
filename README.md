@@ -142,7 +142,7 @@ Identificar patrones demográficos y regionales de mortalidad en Colombia median
 
 ### Autores
   ```text
-  Jairo Teófilo Aramendiz Pinzón
+  Jairo Teófilo Araméndiz Pinzón
   Luz Aida Blandon Caicedo
   Fabio Gomez Estepa
   ```
