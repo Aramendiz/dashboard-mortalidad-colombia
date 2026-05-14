@@ -6,6 +6,9 @@ Este proyecto presenta un dashboard interactivo desarrollado con Dash y Plotly p
 ## Objetivo
 Identificar patrones demográficos y regionales de mortalidad en Colombia mediante visualizaciones interactivas que faciliten la interpretación de los datos y apoyen la toma de decisiones en salud pública.
 
+## Interactividad de la aplicación
+La aplicación es una web dinámica construida con Dash y Plotly. Además de la interacción propia de Plotly en cada gráfico, como tooltips al pasar el cursor y exploración visual de los datos, el dashboard incluye filtros globales por departamento, sexo y ciclo de vida. Estos controles ejecutan callbacks de Dash y recalculan automáticamente los indicadores, el mapa, los gráficos, la tabla de causas y las comparaciones, sin recargar la página.
+
 ## Estructura del proyecto
 
   ```text

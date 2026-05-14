@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import Dash, dcc, html, dash_table
+from dash import Dash, Input, Output, dcc, html, dash_table
 import dash_bootstrap_components as dbc
 import warnings
 warnings.filterwarnings('ignore')
@@ -156,7 +156,8 @@ mapa_df = mapa_df.sort_values('TOTAL', ascending=False)
 # Coordenadas de departamentos
 coords = {
     'AMAZONAS': (-2.5, -71.5), 'ANTIOQUIA': (6.5, -75.5), 'ARAUCA': (6.5, -71.0),
-    'ATLANTICO': (10.8, -75.0), 'BOGOTÁ D.C.': (4.6, -74.1), 'BOGOTÁ': (4.6, -74.1),
+    'ATLANTICO': (10.8, -75.0), 'ATLÁNTICO': (10.8, -75.0), 'BOGOTÁ D.C.': (4.6, -74.1),
+    'BOGOTÁ, D.C.': (4.6, -74.1), 'BOGOTÁ': (4.6, -74.1),
     'BOLÍVAR': (9.0, -74.5), 'BOYACÁ': (5.5, -73.5), 'CALDAS': (5.2, -75.5),
     'CAQUETÁ': (1.5, -74.5), 'CASANARE': (5.5, -71.5), 'CAUCA': (2.5, -76.5),
     'CESAR': (9.3, -73.5), 'CHOCÓ': (6.0, -76.5), 'CÓRDOBA': (8.5, -75.5),
@@ -273,6 +274,7 @@ fig_pastel.update_layout(showlegend=False)
 causas_df = df.groupby(['COD_MUERTE', 'CAUSA'])['CONTEO'].sum().nlargest(10).reset_index()
 causas_df.columns = ['Código', 'Causa de Muerte', 'Total de Casos']
 tabla_causas = dash_table.DataTable(
+    id='tabla-causas',
     columns=[{"name": col, "id": col} for col in causas_df.columns],
     data=causas_df.to_dict('records'), page_size=10,
     style_header={
@@ -358,6 +360,195 @@ def style_figure(fig, show_legend=True):
     fig.update_yaxes(gridcolor='#edf2f7', zerolinecolor='#e2e8f0', tickfont={'color': MUTED_COLOR}, title_font={'color': MUTED_COLOR})
     return fig
 
+def empty_figure(title, message='No hay datos para los filtros seleccionados.'):
+    fig = go.Figure()
+    fig.add_annotation(
+        text=message,
+        x=0.5,
+        y=0.5,
+        xref='paper',
+        yref='paper',
+        showarrow=False,
+        font={'size': 15, 'color': MUTED_COLOR}
+    )
+    fig.update_layout(title=title, height=420)
+    return style_figure(fig, show_legend=False)
+
+def filter_data(departamento='todos', sexo='todos', categoria_edad='todos'):
+    filtered = df.copy()
+    if departamento and departamento != 'todos':
+        filtered = filtered[filtered['DEPARTAMENTO'] == departamento]
+    if sexo and sexo != 'todos':
+        filtered = filtered[filtered['SEXO'] == int(sexo)]
+    if categoria_edad and categoria_edad != 'todos':
+        filtered = filtered[filtered['CATEGORIA_EDAD'] == categoria_edad]
+    return filtered
+
+def build_map_figure(data):
+    grouped = data[data['DEPARTAMENTO'] != 'SIN DATOS'].groupby('DEPARTAMENTO')['CONTEO'].sum().reset_index(name='TOTAL')
+    grouped = grouped.sort_values('TOTAL', ascending=False)
+    if grouped.empty:
+        return empty_figure('Distribución de muertes por departamento')
+
+    grouped['LAT'] = grouped['DEPARTAMENTO'].apply(lambda x: coords.get(x, (4.5, -74.0))[0])
+    grouped['LON'] = grouped['DEPARTAMENTO'].apply(lambda x: coords.get(x, (4.5, -74.0))[1])
+    fig = px.scatter_geo(
+        grouped,
+        lat='LAT',
+        lon='LON',
+        size='TOTAL',
+        hover_name='DEPARTAMENTO',
+        text='DEPARTAMENTO',
+        title='Distribución de muertes por departamento',
+        size_max=80,
+        scope='south america',
+        labels={'TOTAL': 'Número de Muertes'},
+        center={'lat': 4.5, 'lon': -74.0}
+    )
+    fig.update_geos(
+        lataxis_range=[-4.5, 12.5],
+        lonaxis_range=[-79.0, -66.0],
+        resolution=110,
+        showcoastlines=True,
+        coastlinecolor='black',
+        showland=True,
+        landcolor='rgb(243, 243, 243)',
+        showocean=True,
+        oceancolor='rgb(235, 246, 255)',
+        showcountries=True,
+        countrycolor='#94a3b8'
+    )
+    fig.update_traces(textposition='top center')
+    fig.update_layout(height=620)
+    return style_figure(fig, show_legend=False)
+
+def build_line_figure(data):
+    grouped = data.groupby('MES')['CONTEO'].sum().reset_index()
+    if grouped.empty:
+        return empty_figure('Total de muertes por mes')
+    fig = px.line(
+        grouped,
+        x='MES',
+        y='CONTEO',
+        markers=True,
+        title='Total de muertes por mes',
+        labels={'MES': 'Mes', 'CONTEO': 'Número de Muertes'}
+    )
+    style_figure(fig)
+    fig.update_traces(line={'width': 4, 'color': '#0f766e'}, marker={'size': 9, 'color': '#0f766e'})
+    return fig
+
+def build_violent_figure(data):
+    homicidios = data[data['COD_MUERTE'].isin(codigos_homicidio)]
+    homicidios = homicidios[homicidios['MUNICIPIO_NOMBRE'] != 'SIN DATOS']
+    if homicidios.empty:
+        return empty_figure('Top 5 ciudades con más homicidios', 'No hay homicidios X95 para los filtros seleccionados.')
+    grouped = homicidios.groupby('MUNICIPIO_NOMBRE')['CONTEO'].sum().reset_index()
+    grouped.columns = ['MUNICIPIO', 'HOMICIDIOS']
+    grouped = grouped.sort_values('HOMICIDIOS', ascending=False).head(5)
+    fig = px.bar(
+        grouped,
+        x='MUNICIPIO',
+        y='HOMICIDIOS',
+        title='Top 5 ciudades con más homicidios',
+        text='HOMICIDIOS',
+        color='HOMICIDIOS',
+        color_continuous_scale='Reds'
+    )
+    fig.update_traces(textposition='outside')
+    fig.update_layout(xaxis_title='Ciudad', yaxis_title='Número de Homicidios', height=500, coloraxis_showscale=False)
+    return style_figure(fig)
+
+def build_lowest_figure(data):
+    mortality = data[data['MUNICIPIO_NOMBRE'] != 'SIN DATOS'].groupby('MUNICIPIO_NOMBRE')['CONTEO'].sum()
+    mortality = mortality[mortality >= 10]
+    lowest_data = mortality.nsmallest(10).reset_index()
+    if lowest_data.empty:
+        return empty_figure('10 ciudades con menor mortalidad registrada')
+    lowest_data.columns = ['MUNICIPIO', 'MUERTES']
+    fig = px.pie(
+        lowest_data,
+        names='MUNICIPIO',
+        values='MUERTES',
+        title='10 ciudades con menor mortalidad registrada',
+        hole=0.48,
+        color_discrete_sequence=COLORWAY
+    )
+    style_figure(fig)
+    fig.update_layout(showlegend=False)
+    fig.update_traces(textposition='inside', textinfo='percent+label', marker={'line': {'color': '#ffffff', 'width': 2}})
+    return fig
+
+def build_causes_data(data):
+    grouped = data.groupby(['COD_MUERTE', 'CAUSA'])['CONTEO'].sum().nlargest(10).reset_index()
+    grouped.columns = ['Código', 'Causa de Muerte', 'Total de Casos']
+    return grouped
+
+def build_stacked_figure(data):
+    grouped = data[data['DEPARTAMENTO'] != 'SIN DATOS'].groupby(['DEPARTAMENTO', 'SEXO'])['CONTEO'].sum().reset_index()
+    if grouped.empty:
+        return empty_figure('Muertes por sexo en los 10 departamentos con más casos')
+    grouped['SEXO'] = grouped['SEXO'].map({1: 'Hombres', 2: 'Mujeres'}).fillna('Sin información')
+    top_departments = data[data['DEPARTAMENTO'] != 'SIN DATOS'].groupby('DEPARTAMENTO')['CONTEO'].sum().nlargest(10).index
+    grouped = grouped[grouped['DEPARTAMENTO'].isin(top_departments)]
+    fig = px.bar(
+        grouped,
+        x='DEPARTAMENTO',
+        y='CONTEO',
+        color='SEXO',
+        barmode='stack',
+        title='Muertes por sexo en los 10 departamentos con más casos',
+        labels={'CONTEO': 'Número de Muertes', 'SEXO': 'Sexo'},
+        color_discrete_map={'Hombres': '#2563eb', 'Mujeres': '#dc2626', 'Sin información': '#94a3b8'}
+    )
+    return style_figure(fig)
+
+def build_age_figure(data):
+    grouped = data.groupby('CATEGORIA_EDAD')['CONTEO'].sum().reset_index()
+    if grouped.empty:
+        return empty_figure('Distribución de muertes por ciclo de vida')
+    grouped['CATEGORIA_EDAD'] = pd.Categorical(grouped['CATEGORIA_EDAD'], categories=orden_edades, ordered=True)
+    grouped = grouped.sort_values('CATEGORIA_EDAD')
+    fig = px.bar(
+        grouped,
+        x='CATEGORIA_EDAD',
+        y='CONTEO',
+        title='Distribución de muertes por ciclo de vida',
+        labels={'CONTEO': 'Número de Muertes'},
+        color='CONTEO',
+        color_continuous_scale='Teal'
+    )
+    style_figure(fig)
+    fig.update_layout(coloraxis_showscale=False, xaxis_tickangle=-25)
+    return fig
+
+def build_kpis(data):
+    total = len(data)
+    departments = data[data['DEPARTAMENTO'] != 'SIN DATOS']['DEPARTAMENTO'].nunique()
+    municipalities = data[data['MUNICIPIO_NOMBRE'] != 'SIN DATOS']['MUNICIPIO_NOMBRE'].nunique()
+    department_totals = data[data['DEPARTAMENTO'] != 'SIN DATOS'].groupby('DEPARTAMENTO')['CONTEO'].sum()
+    monthly_totals = data.groupby('MES')['CONTEO'].sum()
+
+    department_helper = 'Sin departamento destacado para los filtros.'
+    if not department_totals.empty:
+        department_helper = f"Mayor concentración: {department_totals.idxmax()}."
+
+    peak_month = 'Sin datos'
+    month_helper = 'No hay registros para los filtros seleccionados.'
+    if not monthly_totals.empty:
+        peak_month_number = int(monthly_totals.idxmax())
+        peak_month = MESES.get(peak_month_number, str(peak_month_number))
+        month_helper = f"{format_number(monthly_totals.max())} muertes registradas."
+
+    return {
+        'total': format_number(total),
+        'departments': format_number(departments),
+        'municipalities': format_number(municipalities),
+        'peak_month': peak_month,
+        'department_helper': department_helper,
+        'month_helper': month_helper
+    }
+
 for figure in [fig_lineas, fig_violentas, fig_pastel, fig_apilado, fig_histograma]:
     style_figure(figure)
 
@@ -378,15 +569,32 @@ server = app.server
 
 graph_config = {'displayModeBar': False, 'responsive': True}
 
-def kpi_card(label, value, helper):
+department_options = [{'label': 'Todos los departamentos', 'value': 'todos'}] + [
+    {'label': depto.title(), 'value': depto}
+    for depto in sorted(df[df['DEPARTAMENTO'] != 'SIN DATOS']['DEPARTAMENTO'].dropna().unique())
+]
+
+age_options = [{'label': 'Todos los ciclos de vida', 'value': 'todos'}] + [
+    {'label': categoria, 'value': categoria}
+    for categoria in orden_edades
+    if categoria in set(df['CATEGORIA_EDAD'].dropna().unique())
+]
+
+sex_options = [
+    {'label': 'Todos los sexos', 'value': 'todos'},
+    {'label': 'Hombres', 'value': '1'},
+    {'label': 'Mujeres', 'value': '2'},
+]
+
+def kpi_card(label, value, helper, value_id=None, helper_id=None):
     return html.Div([
         html.P(label, className='kpi-label'),
-        html.H3(value, className='kpi-value'),
-        html.P(helper, className='kpi-helper')
+        html.H3(value, id=value_id, className='kpi-value'),
+        html.P(helper, id=helper_id, className='kpi-helper')
     ], className='kpi-card')
 
-def chart_card(title, description, figure=None, table=None, class_name=''):
-    body = table if table is not None else dcc.Graph(figure=figure, config=graph_config, className='chart-graph')
+def chart_card(title, description, figure=None, table=None, graph_id=None, class_name=''):
+    body = table if table is not None else dcc.Graph(id=graph_id, figure=figure, config=graph_config, className='chart-graph')
     return html.Section([
         html.Div([
             html.H2(title),
@@ -414,17 +622,60 @@ app.layout = html.Div([
     ], className='hero'),
 
     dbc.Container([
+        html.Section([
+            html.Div([
+                html.Div([
+                    html.Span('Exploración dinámica', className='filter-eyebrow'),
+                    html.H2('Filtra los informes interactivos'),
+                    html.P('Selecciona un departamento, sexo o ciclo de vida para recalcular los gráficos sin salir de la página.')
+                ], className='filter-copy'),
+                html.Div([
+                    html.Div([
+                        html.Label('Departamento'),
+                        dcc.Dropdown(
+                            id='department-filter',
+                            options=department_options,
+                            value='todos',
+                            clearable=False,
+                            className='filter-control'
+                        )
+                    ], className='filter-field'),
+                    html.Div([
+                        html.Label('Sexo'),
+                        dcc.Dropdown(
+                            id='sex-filter',
+                            options=sex_options,
+                            value='todos',
+                            clearable=False,
+                            className='filter-control'
+                        )
+                    ], className='filter-field'),
+                    html.Div([
+                        html.Label('Ciclo de vida'),
+                        dcc.Dropdown(
+                            id='age-filter',
+                            options=age_options,
+                            value='todos',
+                            clearable=False,
+                            className='filter-control'
+                        )
+                    ], className='filter-field'),
+                ], className='filter-grid')
+            ], className='filter-card')
+        ], className='filter-section'),
+
         dbc.Row([
-            dbc.Col(kpi_card('Registros analizados', format_number(total_muertes), 'Defunciones consolidadas en la base 2019.'), lg=3, md=6),
-            dbc.Col(kpi_card('Departamentos', format_number(total_departamentos), f"Mayor concentración: {departamento_pico['DEPARTAMENTO']}."), lg=3, md=6),
-            dbc.Col(kpi_card('Municipios identificados', format_number(total_municipios), 'Cobertura territorial para lectura local.'), lg=3, md=6),
-            dbc.Col(kpi_card('Mes con más casos', MESES.get(int(mes_pico['MES']), str(mes_pico['MES'])), f"{format_number(mes_pico['CONTEO'])} muertes registradas."), lg=3, md=6),
+            dbc.Col(kpi_card('Registros analizados', format_number(total_muertes), 'Defunciones consolidadas en la base 2019.', 'kpi-total', 'kpi-total-helper'), lg=3, md=6),
+            dbc.Col(kpi_card('Departamentos', format_number(total_departamentos), f"Mayor concentración: {departamento_pico['DEPARTAMENTO']}.", 'kpi-departments', 'kpi-departments-helper'), lg=3, md=6),
+            dbc.Col(kpi_card('Municipios identificados', format_number(total_municipios), 'Cobertura territorial para lectura local.', 'kpi-municipalities', 'kpi-municipalities-helper'), lg=3, md=6),
+            dbc.Col(kpi_card('Mes con más casos', MESES.get(int(mes_pico['MES']), str(mes_pico['MES'])), f"{format_number(mes_pico['CONTEO'])} muertes registradas.", 'kpi-peak-month', 'kpi-peak-month-helper'), lg=3, md=6),
         ], className='kpi-grid'),
 
         chart_card(
             'Distribución territorial',
             'El tamaño de cada punto resume el volumen de muertes por departamento y permite ubicar rápidamente las zonas de mayor concentración.',
             figure=fig_mapa,
+            graph_id='mapa-graph',
             class_name='featured'
         ),
 
@@ -432,12 +683,14 @@ app.layout = html.Div([
             dbc.Col(chart_card(
                 'Comportamiento mensual',
                 'La serie permite identificar variaciones durante el año y reconocer el mes de mayor registro.',
-                figure=fig_lineas
+                figure=fig_lineas,
+                graph_id='lineas-graph'
             ), lg=6),
             dbc.Col(chart_card(
                 'Ciudades con más homicidios',
                 'Ranking construido con registros asociados a agresión por disparo de arma de fuego según códigos CIE-10 X95.',
-                figure=fig_violentas
+                figure=fig_violentas,
+                graph_id='violentas-graph'
             ), lg=6),
         ], className='g-4'),
 
@@ -445,7 +698,8 @@ app.layout = html.Div([
             dbc.Col(chart_card(
                 'Menor mortalidad municipal',
                 'El gráfico resalta los municipios con menor número de defunciones registradas, filtrando valores mínimos para reducir ruido.',
-                figure=fig_pastel
+                figure=fig_pastel,
+                graph_id='pastel-graph'
             ), lg=5),
             dbc.Col(chart_card(
                 'Principales causas de muerte',
@@ -457,13 +711,15 @@ app.layout = html.Div([
         chart_card(
             'Diferencias por sexo y departamento',
             'La comparación apilada muestra cómo se distribuyen las defunciones de hombres y mujeres en los departamentos con más casos.',
-            figure=fig_apilado
+            figure=fig_apilado,
+            graph_id='apilado-graph'
         ),
 
         chart_card(
             'Mortalidad por ciclo de vida',
             'Las categorías de edad se agrupan según la tabla de referencia del DANE para reconocer los grupos con mayor vulnerabilidad.',
-            figure=fig_histograma
+            figure=fig_histograma,
+            graph_id='histograma-graph'
         ),
 
         html.Footer([
@@ -473,6 +729,49 @@ app.layout = html.Div([
         ], className='site-footer')
     ], fluid='xl', className='main-content')
 ], className='app-shell')
+
+@app.callback(
+    Output('kpi-total', 'children'),
+    Output('kpi-total-helper', 'children'),
+    Output('kpi-departments', 'children'),
+    Output('kpi-departments-helper', 'children'),
+    Output('kpi-municipalities', 'children'),
+    Output('kpi-municipalities-helper', 'children'),
+    Output('kpi-peak-month', 'children'),
+    Output('kpi-peak-month-helper', 'children'),
+    Output('mapa-graph', 'figure'),
+    Output('lineas-graph', 'figure'),
+    Output('violentas-graph', 'figure'),
+    Output('pastel-graph', 'figure'),
+    Output('tabla-causas', 'data'),
+    Output('apilado-graph', 'figure'),
+    Output('histograma-graph', 'figure'),
+    Input('department-filter', 'value'),
+    Input('sex-filter', 'value'),
+    Input('age-filter', 'value'),
+)
+def update_dashboard(department_value, sex_value, age_value):
+    filtered = filter_data(department_value, sex_value, age_value)
+    kpis = build_kpis(filtered)
+    causes = build_causes_data(filtered)
+
+    return (
+        kpis['total'],
+        'Defunciones consolidadas para la selección actual.',
+        kpis['departments'],
+        kpis['department_helper'],
+        kpis['municipalities'],
+        'Municipios incluidos en la selección actual.',
+        kpis['peak_month'],
+        kpis['month_helper'],
+        build_map_figure(filtered),
+        build_line_figure(filtered),
+        build_violent_figure(filtered),
+        build_lowest_figure(filtered),
+        causes.to_dict('records'),
+        build_stacked_figure(filtered),
+        build_age_figure(filtered),
+    )
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8050))
