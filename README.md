@@ -9,6 +9,10 @@ Identificar patrones demográficos y regionales de mortalidad en Colombia median
 ## Interactividad de la aplicación
 La aplicación es una web dinámica construida con Dash y Plotly. Además de la interacción propia de Plotly en cada gráfico, como tooltips al pasar el cursor y exploración visual de los datos, el dashboard incluye filtros globales por departamento, sexo y ciclo de vida. Estos controles ejecutan callbacks de Dash y recalculan automáticamente los indicadores, el mapa, los gráficos, la tabla de causas y las comparaciones, sin recargar la página.
 
+<div align="center">
+  <img src="./assets/img/filtros_dinamicos.png" alt="Dashboard de Mortalidad" width="600">
+</div>
+
 ## Estructura del proyecto
 
   ```text
